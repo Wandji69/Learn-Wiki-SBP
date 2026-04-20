@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Enrollment;
 use App\Repositories\EnrollmentRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 
 class EnrollmentService
@@ -22,5 +23,10 @@ class EnrollmentService
             'user_id' => $userId,
             'course_id' => $courseId,
         ]);
+    }
+
+    public function listUserEnrollments(int $userId): Collection
+    {
+        return $this->enrollmentRepository->listForUser($userId);
     }
 }

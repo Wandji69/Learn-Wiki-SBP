@@ -19,6 +19,8 @@ class CourseResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'duration_minutes' => $this->duration_minutes,
+            'enrolled_students_count' => $this->whenCounted('users'),
+            'modules' => ModuleResource::collection($this->whenLoaded('modules')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

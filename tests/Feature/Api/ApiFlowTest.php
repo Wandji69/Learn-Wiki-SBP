@@ -5,6 +5,7 @@ namespace Tests\Feature\Api;
 use App\Models\Appointment;
 use App\Models\Course;
 use App\Models\User;
+use Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -43,14 +44,22 @@ class ApiFlowTest extends TestCase
 
     public function test_only_admin_can_create_courses(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['password' => 'password']);
         $user->assignRole('user');
 
-        $admin = User::factory()->create();
+        $admin = User::factory()->create(['password' => 'password']);
         $admin->assignRole('admin');
 
-        $userToken = auth('api')->login($user);
-        $adminToken = auth('api')->login($admin);
+        $userToken = auth('api')->attempt([
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $adminToken = auth('api')->attempt([
+            'email' => $admin->email,
+            'password' => 'password',
+        ]);
+
 
         $payload = [
             'title' => 'Intro to APIs',

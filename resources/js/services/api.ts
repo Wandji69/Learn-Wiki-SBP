@@ -22,10 +22,19 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('auth_user');
+            const hadToken = Boolean(localStorage.getItem('auth_token'));
+            const isAppRoute = window.location.pathname.startsWith('/app');
 
-            if (window.location.pathname !== '/app/login') {
+            if (hadToken) {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('auth_user');
+            }
+
+            if (
+                hadToken &&
+                isAppRoute &&
+                window.location.pathname !== '/app/login'
+            ) {
                 window.location.href = '/app/login';
             }
         }

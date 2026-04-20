@@ -2,10 +2,8 @@
 import { Head } from '@inertiajs/vue3';
 import { onMounted, reactive, ref } from 'vue';
 import api from '@/services/api';
-import { useAuthStore } from '@/stores/auth';
 import type { Appointment } from '@/types';
 
-const authStore = useAuthStore();
 const appointments = ref<Appointment[]>([]);
 const message = ref('');
 
@@ -15,23 +13,13 @@ const form = reactive({
     notes: '',
 });
 
-const ensureAuth = async () => {
-    if (!authStore.isAuthenticated) {
-        window.location.href = '/app/login';
-
-        return;
-    }
-
-    try {
-        await authStore.me();
-    } catch {
-        window.location.href = '/app/login';
-    }
-};
-
 const loadAppointments = async () => {
-    const { data } = await api.get('/appointments');
-    appointments.value = data.data;
+    try {
+        const { data } = await api.get('/appointments');
+        appointments.value = data.data;
+    } catch {
+        message.value = 'Unable to load appointments right now.';
+    }
 };
 
 const book = async () => {
@@ -41,13 +29,7 @@ const book = async () => {
     await loadAppointments();
 };
 
-const logout = async () => {
-    await authStore.logout();
-    window.location.href = '/app/login';
-};
-
 onMounted(async () => {
-    await ensureAuth();
     await loadAppointments();
 });
 </script>
@@ -59,8 +41,7 @@ onMounted(async () => {
         <div class="d-flex justify-space-between align-center mb-4">
             <h1>Appointments</h1>
             <div>
-                <a href="/app/courses" class="mr-4">Courses</a>
-                <v-btn color="secondary" @click="logout">Logout</v-btn>
+                <a href="/user/courses" class="mr-4">Courses</a>
             </div>
         </div>
 

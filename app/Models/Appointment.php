@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Fillable(['user_id', 'practitioner_name', 'appointment_at', 'notes', 'status'])]
 class Appointment extends Model
 {
-    #[Fillable(['user_id', 'practitioner_name', 'appointment_at', 'notes', 'status'])]
     public function casts(): array
     {
         return [

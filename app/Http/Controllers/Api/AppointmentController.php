@@ -14,10 +14,12 @@ class AppointmentController extends Controller
 
     public function index(Request $request)
     {
-        $appointments = $this->appointmentService->listForUser(
-            $request->user('api')->id,
-            (int) $request->integer('per_page', 10)
-        );
+        $user = $request->user('api');
+        $perPage = (int) $request->integer('per_page', 10);
+
+        $appointments = $user->hasRole('admin')
+            ? $this->appointmentService->listAll($perPage)
+            : $this->appointmentService->listForUser($user->id, $perPage);
 
         return AppointmentResource::collection($appointments);
     }

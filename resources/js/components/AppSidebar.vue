@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-vue-next';
+import { Link, usePage } from '@inertiajs/vue3';
+import { BookOpen, CalendarDays, LayoutGrid } from 'lucide-vue-next';
+import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
-import NavFooter from '@/components/NavFooter.vue';
+// import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -14,29 +15,52 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
-import type { NavItem } from '@/types';
+import * as adminRoutes from '@/routes/admin';
+import * as userRoutes from '@/routes/user';
+import type { AuthUser, NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
+const page = usePage();
+const user = computed<AuthUser | null>(
+    () => (page.props.auth?.user as AuthUser) ?? null,
+);
+const isAdmin = computed(() =>
+    user.value?.roles?.some((role) => role.name === 'admin'),
+);
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
-];
+const mainNavItems = computed<NavItem[]>(() => {
+    const dashboardHref = isAdmin.value
+        ? adminRoutes.dashboard()
+        : userRoutes.dashboard();
+    const coursesHref = isAdmin.value
+        ? adminRoutes.courses()
+        : userRoutes.courses();
+    const appointmentsHref = isAdmin.value
+        ? adminRoutes.appointments()
+        : userRoutes.appointments();
+
+    return [
+        {
+            title: 'Dashboard',
+            href: dashboardHref,
+            icon: LayoutGrid,
+        },
+        {
+            title: isAdmin.value ? 'Course Management' : 'Courses',
+            href: coursesHref,
+            icon: BookOpen,
+        },
+        {
+            title: isAdmin.value ? 'Appointment Management' : 'Appointments',
+            href: appointmentsHref,
+            icon: CalendarDays,
+        },
+    ];
+});
+
+const homeHref = computed(() =>
+    isAdmin.value ? adminRoutes.dashboard() : userRoutes.dashboard(),
+);
+
 </script>
 
 <template>
@@ -45,7 +69,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
+                        <Link :href="homeHref">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>
@@ -58,7 +82,6 @@ const footerNavItems: NavItem[] = [
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>

@@ -10,6 +10,11 @@ class AppointmentService
 {
     public function __construct(private readonly AppointmentRepository $appointmentRepository) {}
 
+    public function listAll(int $perPage = 10): LengthAwarePaginator
+    {
+        return $this->appointmentRepository->paginateAll($perPage);
+    }
+
     public function listForUser(int $userId, int $perPage = 10): LengthAwarePaginator
     {
         return $this->appointmentRepository->paginateForUser($userId, $perPage);
