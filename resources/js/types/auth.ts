@@ -18,3 +18,29 @@ export type TwoFactorConfigContent = {
     description: string;
     buttonText: string;
 };
+
+export type AuthUser = {
+    id: number;
+    name: string;
+    email: string;
+    roles?: Array<{ id: number; name: string }>;
+};
+
+export type LoginPayload = {
+    email: string;
+    password: string;
+};
+
+export type RegisterPayload = {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+};
+
+export type AuthResponse = {
+    token: string;
+    token_type: string;
+    expires_in: number;
+    user: AuthUser;
+};
