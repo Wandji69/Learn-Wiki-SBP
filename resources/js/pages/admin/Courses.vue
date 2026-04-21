@@ -117,37 +117,18 @@ const createCourse = async () => {
 };
 
 const openCreateDialog = () => {
-    // #region agent log
-    fetch('http://127.0.0.1:7695/ingest/2a848e96-f1b8-418a-8aec-1656ee1b9cbe', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '86a769' }, body: JSON.stringify({ sessionId: '86a769', runId: debugRunId, hypothesisId: 'H1', location: 'resources/js/pages/admin/Courses.vue:openCreateDialog', message: 'Create Course button handler fired', data: { before: showCreateDialog.value }, timestamp: Date.now() }) }).catch(() => {});
-    // #endregion
     showCreateDialog.value = true;
 };
 
-watch(showCreateDialog, (value) => {
-    // #region agent log
-    fetch('http://127.0.0.1:7695/ingest/2a848e96-f1b8-418a-8aec-1656ee1b9cbe', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '86a769' }, body: JSON.stringify({ sessionId: '86a769', runId: debugRunId, hypothesisId: 'H2', location: 'resources/js/pages/admin/Courses.vue:watch(showCreateDialog)', message: 'showCreateDialog changed', data: { value }, timestamp: Date.now() }) }).catch(() => {});
-    // #endregion
-});
 
 watch(showCreateDialog, async (value) => {
     if (!value) {
         return;
     }
-
     await nextTick();
-    // #region agent log
-    fetch('http://127.0.0.1:7695/ingest/2a848e96-f1b8-418a-8aec-1656ee1b9cbe', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '86a769' }, body: JSON.stringify({ sessionId: '86a769', runId: debugRunId, hypothesisId: 'H4', location: 'resources/js/pages/admin/Courses.vue:watch(showCreateDialog,nextTick)', message: 'Course modal DOM rendered check', data: { modalExists: Boolean(document.querySelector('[data-debug-course-modal]')), titleExists: Boolean(document.querySelector('[data-debug-course-modal-title]')), inputCount: document.querySelectorAll('[data-debug-course-modal] input').length, textareaCount: document.querySelectorAll('[data-debug-course-modal] textarea').length }, timestamp: Date.now() }) }).catch(() => {});
-    // #endregion
 });
 
 onMounted(async () => {
-    const instance = getCurrentInstance();
-    // #region agent log
-    fetch('http://127.0.0.1:7695/ingest/2a848e96-f1b8-418a-8aec-1656ee1b9cbe', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '86a769' }, body: JSON.stringify({ sessionId: '86a769', runId: debugRunId, hypothesisId: 'H3', location: 'resources/js/pages/admin/Courses.vue:onMounted', message: 'Admin courses mounted; initial UI state', data: { showCreateDialog: showCreateDialog.value, createButtonExists: Boolean(document.querySelector('[data-debug-create-course-btn]')), modalExistsAtMount: Boolean(document.querySelector('[data-debug-course-modal]')) }, timestamp: Date.now() }) }).catch(() => {});
-    // #endregion
-    // #region agent log
-    fetch('http://127.0.0.1:7695/ingest/2a848e96-f1b8-418a-8aec-1656ee1b9cbe', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '86a769' }, body: JSON.stringify({ sessionId: '86a769', runId: debugRunId, hypothesisId: 'H5', location: 'resources/js/pages/admin/Courses.vue:onMounted', message: 'Vuetify component/runtime presence check', data: { hasVuetifyGlobal: Boolean(instance?.appContext.config.globalProperties?.$vuetify), unresolvedVBtnTagExists: Boolean(document.querySelector('v-btn[data-debug-create-course-btn]')), resolvedNativeButtonExists: Boolean(document.querySelector('button[data-debug-create-course-btn]')) }, timestamp: Date.now() }) }).catch(() => {});
-    // #endregion
     await Promise.all([loadCourses(), loadAppointmentsCount()]);
 });
 </script>
@@ -223,12 +204,12 @@ onMounted(async () => {
             </div>
         </div>
 
-        <div
+        <!-- <div
             class="rounded-xl border border-zinc-200 bg-white p-4 text-sm shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
         >
             <span class="font-semibold">Platform snapshot:</span>
             {{ appointmentCount }} appointments booked across the platform.
-        </div>
+        </div> -->
 
         <div
             class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"

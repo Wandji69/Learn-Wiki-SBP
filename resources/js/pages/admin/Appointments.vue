@@ -64,17 +64,8 @@ const createAppointment = async () => {
 };
 
 const openCreateDialog = () => {
-    // #region agent log
-    fetch('http://127.0.0.1:7695/ingest/2a848e96-f1b8-418a-8aec-1656ee1b9cbe', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '86a769' }, body: JSON.stringify({ sessionId: '86a769', runId: debugRunId, hypothesisId: 'H1', location: 'resources/js/pages/admin/Appointments.vue:openCreateDialog', message: 'Create Appointment button handler fired', data: { before: showCreateDialog.value }, timestamp: Date.now() }) }).catch(() => {});
-    // #endregion
     showCreateDialog.value = true;
 };
-
-watch(showCreateDialog, (value) => {
-    // #region agent log
-    fetch('http://127.0.0.1:7695/ingest/2a848e96-f1b8-418a-8aec-1656ee1b9cbe', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '86a769' }, body: JSON.stringify({ sessionId: '86a769', runId: debugRunId, hypothesisId: 'H2', location: 'resources/js/pages/admin/Appointments.vue:watch(showCreateDialog)', message: 'showCreateDialog changed', data: { value }, timestamp: Date.now() }) }).catch(() => {});
-    // #endregion
-});
 
 watch(showCreateDialog, async (value) => {
     if (!value) {
@@ -82,19 +73,10 @@ watch(showCreateDialog, async (value) => {
     }
 
     await nextTick();
-    // #region agent log
-    fetch('http://127.0.0.1:7695/ingest/2a848e96-f1b8-418a-8aec-1656ee1b9cbe', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '86a769' }, body: JSON.stringify({ sessionId: '86a769', runId: debugRunId, hypothesisId: 'H4', location: 'resources/js/pages/admin/Appointments.vue:watch(showCreateDialog,nextTick)', message: 'Appointment dialog DOM rendered check', data: { dialogExists: Boolean(document.querySelector('[data-debug-appointment-dialog]')), titleExists: Boolean(document.querySelector('[data-debug-appointment-title]')), inputCount: document.querySelectorAll('[data-debug-appointment-dialog] input').length, textareaCount: document.querySelectorAll('[data-debug-appointment-dialog] textarea').length }, timestamp: Date.now() }) }).catch(() => {});
-    // #endregion
 });
 
 onMounted(async () => {
     const instance = getCurrentInstance();
-    // #region agent log
-    fetch('http://127.0.0.1:7695/ingest/2a848e96-f1b8-418a-8aec-1656ee1b9cbe', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '86a769' }, body: JSON.stringify({ sessionId: '86a769', runId: debugRunId, hypothesisId: 'H3', location: 'resources/js/pages/admin/Appointments.vue:onMounted', message: 'Admin appointments mounted; initial UI state', data: { showCreateDialog: showCreateDialog.value, createButtonExists: Boolean(document.querySelector('[data-debug-create-appointment-btn]')), dialogContentExistsAtMount: Boolean(document.querySelector('[data-debug-appointment-dialog]')) }, timestamp: Date.now() }) }).catch(() => {});
-    // #endregion
-    // #region agent log
-    fetch('http://127.0.0.1:7695/ingest/2a848e96-f1b8-418a-8aec-1656ee1b9cbe', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '86a769' }, body: JSON.stringify({ sessionId: '86a769', runId: debugRunId, hypothesisId: 'H5', location: 'resources/js/pages/admin/Appointments.vue:onMounted', message: 'Vuetify component/runtime presence check', data: { hasVuetifyGlobal: Boolean(instance?.appContext.config.globalProperties?.$vuetify), unresolvedVBtnTagExists: Boolean(document.querySelector('v-btn[data-debug-create-appointment-btn]')), resolvedNativeButtonExists: Boolean(document.querySelector('button[data-debug-create-appointment-btn]')) }, timestamp: Date.now() }) }).catch(() => {});
-    // #endregion
     await loadAppointments();
 });
 </script>
