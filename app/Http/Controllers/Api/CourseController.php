@@ -10,7 +10,12 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    public function __construct(private readonly CourseService $courseService) {}
+    private CourseService $courseService;
+
+    public function __construct(CourseService $courseService)
+    {
+        $this->courseService = $courseService;
+    }
 
     public function index(Request $request)
     {

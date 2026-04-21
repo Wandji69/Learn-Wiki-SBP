@@ -8,16 +8,17 @@ import {
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import UserInfo from '@/components/UserInfo.vue';
-import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
+import { useAuthStore } from '@/stores/auth';
 import type { User } from '@/types';
 
 type Props = {
     user: User;
 };
 
-const handleLogout = () => {
-    router.flushAll();
+const handleLogout = async () => {
+    await useAuthStore().logout();
+    router.visit('/');
 };
 
 defineProps<Props>();
@@ -40,15 +41,13 @@ defineProps<Props>();
     </DropdownMenuGroup>
     <DropdownMenuSeparator />
     <DropdownMenuItem :as-child="true">
-        <Link
-            class="block w-full cursor-pointer"
-            :href="logout()"
+        <button
+            class="block w-full cursor-pointer text-left"
             @click="handleLogout"
-            as="button"
             data-test="logout-button"
         >
-            <LogOut class="mr-2 h-4 w-4" />
+            <LogOut class="mr-2 inline h-4 w-4" />
             Log out
-        </Link>
+        </button>
     </DropdownMenuItem>
 </template>

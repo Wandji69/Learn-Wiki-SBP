@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { LayoutGrid, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
@@ -25,17 +25,11 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
-// import {
-//     Tooltip,
-//     TooltipContent,
-//     TooltipProvider,
-//     TooltipTrigger,
-// } from '@/components/ui/tooltip';
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { getInitials } from '@/composables/useInitials';
-// import { toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
+import { useAuthStore } from '@/stores/auth';
 import type { BreadcrumbItem, NavItem } from '@/types';
 
 type Props = {
@@ -46,8 +40,8 @@ const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 
-const page = usePage();
-const auth = computed(() => page.props.auth);
+const authStore = useAuthStore();
+const auth = computed(() => ({ user: authStore.user }));
 const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
 
 const activeItemStyles =
@@ -60,19 +54,6 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
 ];
-
-// const rightNavItems: NavItem[] = [
-//     {
-//         title: 'Repository',
-//         href: 'https://github.com/laravel/vue-starter-kit',
-//         icon: Folder,
-//     },
-//     {
-//         title: 'Documentation',
-//         href: 'https://laravel.com/docs/starter-kits#vue',
-//         icon: BookOpen,
-//     },
-// ];
 </script>
 
 <template>
@@ -249,9 +230,9 @@ const mainNavItems: NavItem[] = [
                                     class="size-8 overflow-hidden rounded-full"
                                 >
                                     <AvatarImage
-                                        v-if="auth.user.avatar"
-                                        :src="auth.user.avatar"
-                                        :alt="auth.user.name"
+                                        v-if="auth.user?.avatar"
+                                        :src="auth.user?.avatar"
+                                        :alt="auth.user?.name"
                                     />
                                     <AvatarFallback
                                         class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
@@ -262,7 +243,7 @@ const mainNavItems: NavItem[] = [
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-56">
-                            <UserMenuContent :user="auth.user" />
+                            <UserMenuContent v-if="auth?.user" :user="auth.user" />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

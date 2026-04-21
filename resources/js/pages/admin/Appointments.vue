@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { computed, getCurrentInstance, nextTick, onMounted, reactive, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import api from '@/services/api';
 import type { Appointment } from '@/types';
 
@@ -10,7 +10,7 @@ const messageType = ref<'success' | 'error'>('success');
 const showCreateDialog = ref(false);
 const isLoadingAppointments = ref(false);
 const isCreatingAppointment = ref(false);
-const debugRunId = 'appointments-initial';
+// const debugRunId = 'appointments-initial';
 
 const form = reactive({
     practitioner_name: 'Dr. Smith',
@@ -20,13 +20,22 @@ const form = reactive({
 
 const totalAppointments = computed(() => appointments.value.length);
 const bookedAppointments = computed(
-    () => appointments.value.filter((appointment) => appointment.status === 'booked').length,
+    () =>
+        appointments.value.filter(
+            (appointment) => appointment.status === 'booked',
+        ).length,
 );
 const completedAppointments = computed(
-    () => appointments.value.filter((appointment) => appointment.status === 'completed').length,
+    () =>
+        appointments.value.filter(
+            (appointment) => appointment.status === 'completed',
+        ).length,
 );
 const cancelledAppointments = computed(
-    () => appointments.value.filter((appointment) => appointment.status === 'cancelled').length,
+    () =>
+        appointments.value.filter(
+            (appointment) => appointment.status === 'cancelled',
+        ).length,
 );
 
 const loadAppointments = async () => {
@@ -45,7 +54,7 @@ const loadAppointments = async () => {
 
 const createAppointment = async () => {
     isCreatingAppointment.value = true;
-    
+
     try {
         await api.post('/appointments', form);
         messageType.value = 'success';
@@ -76,7 +85,6 @@ watch(showCreateDialog, async (value) => {
 });
 
 onMounted(async () => {
-    const instance = getCurrentInstance();
     await loadAppointments();
 });
 </script>
@@ -123,7 +131,9 @@ onMounted(async () => {
                 >
                     Total Appointments
                 </div>
-                <div class="mt-2 text-3xl font-bold">{{ totalAppointments }}</div>
+                <div class="mt-2 text-3xl font-bold">
+                    {{ totalAppointments }}
+                </div>
             </div>
             <div
                 class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
@@ -133,7 +143,9 @@ onMounted(async () => {
                 >
                     Booked
                 </div>
-                <div class="mt-2 text-3xl font-bold text-blue-600">{{ bookedAppointments }}</div>
+                <div class="mt-2 text-3xl font-bold text-blue-600">
+                    {{ bookedAppointments }}
+                </div>
             </div>
             <div
                 class="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
@@ -143,7 +155,9 @@ onMounted(async () => {
                 >
                     Completed
                 </div>
-                <div class="mt-2 text-3xl font-bold text-green-600">{{ completedAppointments }}</div>
+                <div class="mt-2 text-3xl font-bold text-green-600">
+                    {{ completedAppointments }}
+                </div>
             </div>
         </div>
 
@@ -156,14 +170,18 @@ onMounted(async () => {
                 v-if="appointments.length === 0"
                 class="rounded-lg border border-dashed border-zinc-300 p-6 text-center text-zinc-500 dark:border-zinc-700"
             >
-                <span v-if="isLoadingAppointments">Loading appointments...</span>
+                <span v-if="isLoadingAppointments"
+                    >Loading appointments...</span
+                >
                 <span v-else>No appointments yet.</span>
             </div>
 
             <div v-else class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
                     <thead>
-                        <tr class="border-b border-zinc-200 dark:border-zinc-700">
+                        <tr
+                            class="border-b border-zinc-200 dark:border-zinc-700"
+                        >
                             <th class="pb-2">Practitioner</th>
                             <th class="pb-2">Date/Time</th>
                             <th class="pb-2">Time Slot</th>
@@ -178,9 +196,15 @@ onMounted(async () => {
                             :key="appointment.id"
                             class="border-b border-zinc-100 dark:border-zinc-800"
                         >
-                            <td class="py-3 font-medium">{{ appointment.practitioner_name }}</td>
+                            <td class="py-3 font-medium">
+                                {{ appointment.practitioner_name }}
+                            </td>
                             <td class="py-3 text-zinc-600 dark:text-zinc-300">
-                                {{ new Date(appointment.appointment_at).toLocaleString() }}
+                                {{
+                                    new Date(
+                                        appointment.appointment_at,
+                                    ).toLocaleString()
+                                }}
                             </td>
                             <td class="py-3 text-zinc-600 dark:text-zinc-300">
                                 {{ appointment.time_slot || '-' }}
@@ -215,7 +239,8 @@ onMounted(async () => {
             class="rounded-xl border border-zinc-200 bg-white p-4 text-sm shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
         >
             <span class="font-semibold">Time slot overview:</span>
-            {{ bookedAppointments }} booked, {{ completedAppointments }} completed,
+            {{ bookedAppointments }} booked,
+            {{ completedAppointments }} completed,
             {{ cancelledAppointments }} cancelled.
         </div>
 
@@ -230,9 +255,14 @@ onMounted(async () => {
                 <h2 data-debug-appointment-title class="text-lg font-bold">
                     Create Appointment
                 </h2>
-                <form @submit.prevent="createAppointment" class="mt-4 space-y-3">
+                <form
+                    @submit.prevent="createAppointment"
+                    class="mt-4 space-y-3"
+                >
                     <div>
-                        <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                        <label
+                            class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
+                        >
                             Practitioner
                         </label>
                         <input
@@ -243,7 +273,9 @@ onMounted(async () => {
                         />
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                        <label
+                            class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
+                        >
                             Date & Time
                         </label>
                         <input
@@ -254,7 +286,9 @@ onMounted(async () => {
                         />
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                        <label
+                            class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
+                        >
                             Notes
                         </label>
                         <textarea

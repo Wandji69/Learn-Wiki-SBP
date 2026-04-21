@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
@@ -9,8 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { register } from '@/routes';
-import { store } from '@/routes/login';
 import { request } from '@/routes/password';
+import { useAuthStore } from '@/stores/auth';
 
 defineOptions({
     layout: {
@@ -24,6 +25,38 @@ defineProps<{
     canResetPassword: boolean;
     canRegister: boolean;
 }>();
+
+const authStore = useAuthStore();
+const form = ref({ email: '', password: '', remember: false });
+const errors = ref<Record<string, string>>({});
+const processing = ref(false);
+
+const submit = async () => {
+    processing.value = true;
+    errors.value = {};
+
+    try {
+        const response = await authStore.login(form.value);
+        const nextPath = response.user.roles?.some((role: any) => role.name === 'admin')
+            ? '/admin/dashboard'
+            : '/user/dashboard';
+        router.visit(nextPath);
+    } catch (e: any) {
+        if (e.response?.data?.errors) {
+            errors.value = Object.fromEntries(
+                Object.entries(e.response.data.errors).map(([k, v]) => [
+                    k,
+                    Array.isArray(v) ? v[0] : v,
+                ]),
+            );
+        } else {
+            errors.value = { email: 'Unable to login.' };
+        }
+    } finally {
+        processing.value = false;
+        form.value.password = '';
+    }
+};
 </script>
 
 <template>
@@ -36,12 +69,7 @@ defineProps<{
         {{ status }}
     </div>
 
-    <Form
-        v-bind="store.form()"
-        :reset-on-success="['password']"
-        v-slot="{ errors, processing }"
-        class="flex flex-col gap-6"
-    >
+    <form @submit.prevent="submit" class="flex flex-col gap-6">
         <div class="grid gap-6">
             <div class="grid gap-2">
                 <Label for="email">Email address</Label>
@@ -49,6 +77,7 @@ defineProps<{
                     id="email"
                     type="email"
                     name="email"
+                    v-model="form.email"
                     required
                     autofocus
                     :tabindex="1"
@@ -73,6 +102,7 @@ defineProps<{
                 <PasswordInput
                     id="password"
                     name="password"
+                    v-model="form.password"
                     required
                     :tabindex="2"
                     autocomplete="current-password"
@@ -83,7 +113,12 @@ defineProps<{
 
             <div class="flex items-center justify-between">
                 <Label for="remember" class="flex items-center space-x-3">
-                    <Checkbox id="remember" name="remember" :tabindex="3" />
+                    <Checkbox
+                        id="remember"
+                        name="remember"
+                        v-model:checked="form.remember"
+                        :tabindex="3"
+                    />
                     <span>Remember me</span>
                 </Label>
             </div>
@@ -107,5 +142,5 @@ defineProps<{
             Don't have an account?
             <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
         </div>
-    </Form>
+    </form>
 </template>

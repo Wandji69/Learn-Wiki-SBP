@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { BookOpen, CalendarDays, LayoutGrid } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
@@ -17,12 +17,11 @@ import {
 } from '@/components/ui/sidebar';
 import * as adminRoutes from '@/routes/admin';
 import * as userRoutes from '@/routes/user';
+import { useAuthStore } from '@/stores/auth';
 import type { AuthUser, NavItem } from '@/types';
 
-const page = usePage();
-const user = computed<AuthUser | null>(
-    () => (page.props.auth?.user as AuthUser) ?? null,
-);
+const authStore = useAuthStore();
+const user = computed<AuthUser | null>(() => authStore.user ?? null);
 const isAdmin = computed(() =>
     user.value?.roles?.some((role) => role.name === 'admin'),
 );
@@ -60,7 +59,6 @@ const mainNavItems = computed<NavItem[]>(() => {
 const homeHref = computed(() =>
     isAdmin.value ? adminRoutes.dashboard() : userRoutes.dashboard(),
 );
-
 </script>
 
 <template>

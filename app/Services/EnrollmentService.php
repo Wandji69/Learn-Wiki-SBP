@@ -9,7 +9,12 @@ use Illuminate\Validation\ValidationException;
 
 class EnrollmentService
 {
-    public function __construct(private readonly EnrollmentRepository $enrollmentRepository) {}
+    private $enrollmentRepository;
+
+    public function __construct(EnrollmentRepository $enrollmentRepository)
+    {
+        $this->enrollmentRepository = $enrollmentRepository;
+    }
 
     public function enroll(int $userId, int $courseId): Enrollment
     {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { computed, getCurrentInstance, nextTick, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import api from '@/services/api';
 import type { Course } from '@/types';
 
@@ -14,11 +14,14 @@ const isCreatingCourse = ref(false);
 const newCourse = ref({ title: '', description: '', duration_minutes: 60 });
 const showCreateDialog = ref(false);
 const expandedCourseIds = ref<number[]>([]);
-const debugRunId = 'courses-initial';
+// const debugRunId = 'courses-initial';
 
 const totalCourses = computed(() => courses.value.length);
 const totalDuration = computed(() =>
-    courses.value.reduce((sum, course) => sum + (course.duration_minutes ?? 0), 0),
+    courses.value.reduce(
+        (sum, course) => sum + (course.duration_minutes ?? 0),
+        0,
+    ),
 );
 const totalEnrolledStudents = computed(() =>
     courses.value.reduce(
@@ -92,7 +95,9 @@ const loadCourses = async () => {
 const loadAppointmentsCount = async () => {
     try {
         const { data } = await api.get('/appointments');
-        appointmentCount.value = Array.isArray(data.data) ? data.data.length : 0;
+        appointmentCount.value = Array.isArray(data.data)
+            ? data.data.length
+            : 0;
     } catch {
         appointmentCount.value = 0;
     }
@@ -120,11 +125,11 @@ const openCreateDialog = () => {
     showCreateDialog.value = true;
 };
 
-
 watch(showCreateDialog, async (value) => {
     if (!value) {
         return;
     }
+
     await nextTick();
 });
 
@@ -222,7 +227,10 @@ onMounted(async () => {
                 <span v-if="isLoadingCourses">Loading courses...</span>
                 <span v-else>No courses yet.</span>
             </div>
-            <div v-else class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div
+                v-else
+                class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+            >
                 <div
                     v-for="course in courses"
                     :key="course.id"
@@ -234,11 +242,16 @@ onMounted(async () => {
                     >
                         {{ course.description || 'No description' }}
                     </p>
-                    <div class="mt-3 text-xs font-semibold text-zinc-500 uppercase">
+                    <div
+                        class="mt-3 text-xs font-semibold text-zinc-500 uppercase"
+                    >
                         {{ course.duration_minutes || 'N/A' }} minutes
                     </div>
-                    <div class="mt-2 text-xs font-semibold text-zinc-500 uppercase">
-                        {{ course.enrolled_students_count ?? 0 }} enrolled students
+                    <div
+                        class="mt-2 text-xs font-semibold text-zinc-500 uppercase"
+                    >
+                        {{ course.enrolled_students_count ?? 0 }} enrolled
+                        students
                     </div>
                     <div class="mt-2 text-xs text-zinc-500 dark:text-zinc-300">
                         {{ course.modules?.length ?? 0 }} modules,
@@ -266,7 +279,9 @@ onMounted(async () => {
                         class="mt-4 space-y-3 rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-900"
                     >
                         <div
-                            v-if="!course.modules || course.modules.length === 0"
+                            v-if="
+                                !course.modules || course.modules.length === 0
+                            "
                             class="text-sm text-zinc-500"
                         >
                             No module structure added yet.
@@ -278,7 +293,8 @@ onMounted(async () => {
                                 class="rounded border border-zinc-200 p-3 dark:border-zinc-700"
                             >
                                 <p class="text-sm font-semibold">
-                                    Module {{ module.order ?? '-' }}: {{ module.title }}
+                                    Module {{ module.order ?? '-' }}:
+                                    {{ module.title }}
                                 </p>
                                 <div
                                     v-if="module.lessons.length === 0"
@@ -309,7 +325,8 @@ onMounted(async () => {
                                                 class="rounded bg-zinc-100 p-2 text-xs dark:bg-zinc-800"
                                             >
                                                 <p class="font-semibold">
-                                                    Topic {{ topic.order ?? '-' }}:
+                                                    Topic
+                                                    {{ topic.order ?? '-' }}:
                                                     {{ topic.title }}
                                                 </p>
                                                 <ul class="mt-1 list-disc pl-4">
@@ -318,7 +335,9 @@ onMounted(async () => {
                                                         :key="content.id"
                                                         class="text-zinc-700 dark:text-zinc-300"
                                                     >
-                                                        <span class="font-medium uppercase">
+                                                        <span
+                                                            class="font-medium uppercase"
+                                                        >
                                                             {{ content.type }}:
                                                         </span>
                                                         {{ content.body }}
@@ -343,10 +362,14 @@ onMounted(async () => {
             <div
                 class="w-full max-w-2xl rounded-xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
             >
-                <h2 data-debug-course-modal-title class="text-lg font-bold">Create New Course</h2>
+                <h2 data-debug-course-modal-title class="text-lg font-bold">
+                    Create New Course
+                </h2>
                 <form @submit.prevent="createCourse" class="mt-4 space-y-3">
                     <div>
-                        <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                        <label
+                            class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
+                        >
                             Title
                         </label>
                         <input
@@ -357,7 +380,9 @@ onMounted(async () => {
                         />
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                        <label
+                            class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
+                        >
                             Description
                         </label>
                         <textarea
@@ -367,7 +392,9 @@ onMounted(async () => {
                         />
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
+                        <label
+                            class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200"
+                        >
                             Duration (minutes)
                         </label>
                         <input
@@ -391,7 +418,11 @@ onMounted(async () => {
                             :disabled="isCreatingCourse"
                             class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {{ isCreatingCourse ? 'Creating...' : 'Create Course' }}
+                            {{
+                                isCreatingCourse
+                                    ? 'Creating...'
+                                    : 'Create Course'
+                            }}
                         </button>
                     </div>
                 </form>

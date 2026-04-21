@@ -10,11 +10,11 @@ use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
-    public function __construct(private readonly AppointmentService $appointmentService) {}
+    public function __construct(private AppointmentService $appointmentService) {}
 
     public function index(Request $request)
     {
-        $user = $request->user('api');
+        $user = $request->user();
         $perPage = (int) $request->integer('per_page', 10);
 
         $appointments = $user->hasRole('admin')
@@ -27,7 +27,7 @@ class AppointmentController extends Controller
     public function store(StoreAppointmentRequest $request)
     {
         $appointment = $this->appointmentService->createForUser(
-            $request->user('api')->id,
+            $request->user()->id,
             $request->validated()
         );
 

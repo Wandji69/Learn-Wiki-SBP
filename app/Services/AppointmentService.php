@@ -8,7 +8,12 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class AppointmentService
 {
-    public function __construct(private readonly AppointmentRepository $appointmentRepository) {}
+    private $appointmentRepository;
+
+    public function __construct(AppointmentRepository $appointmentRepository)
+    {
+        $this->appointmentRepository = $appointmentRepository;
+    }
 
     public function listAll(int $perPage = 10): LengthAwarePaginator
     {

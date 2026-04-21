@@ -60,7 +60,6 @@ class ApiFlowTest extends TestCase
     //         'password' => 'password',
     //     ]);
 
-
     //     $payload = [
     //         'title' => 'Intro to APIs',
     //         'description' => 'Course description',

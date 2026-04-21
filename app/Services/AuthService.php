@@ -10,7 +10,12 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
-    public function __construct(private readonly UserRepository $userRepository) {}
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     public function register(array $data): array
     {

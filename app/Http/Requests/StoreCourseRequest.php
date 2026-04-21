@@ -12,7 +12,7 @@ class StoreCourseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user('api')?->hasRole('admin') ?? false;
+        return $this->user()?->hasRole('admin') ?? false;
     }
 
     /**

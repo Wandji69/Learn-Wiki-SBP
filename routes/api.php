@@ -14,7 +14,7 @@ Route::prefix('auth')->group(function () {
 Route::get('/courses', [CourseController::class, 'index']);
 Route::get('/appointments', [AppointmentController::class, 'index']);
 
-Route::middleware('auth:web,api')->group(function () {
+Route::middleware('auth:api')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     // Route::get('/auth/me', [AuthController::class, 'me']);
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Head, router, usePage } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { computed, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 import type { AuthUser } from '@/types';
 
 defineOptions({
@@ -14,10 +15,8 @@ defineOptions({
     },
 });
 
-const page = usePage();
-const user = computed<AuthUser | null>(
-    () => (page.props.auth?.user as AuthUser) ?? null,
-);
+const authStore = useAuthStore();
+const user = computed<AuthUser | null>(() => authStore.user);
 
 onMounted(() => {
     const nextPath = user.value?.roles?.some((role) => role.name === 'admin')

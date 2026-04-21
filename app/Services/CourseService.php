@@ -8,7 +8,12 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CourseService
 {
-    public function __construct(private readonly CourseRepository $courseRepository) {}
+    private $courseRepository;
+
+    public function __construct(CourseRepository $courseRepository)
+    {
+        $this->courseRepository = $courseRepository;
+    }
 
     public function listCourses(int $perPage = 10): LengthAwarePaginator
     {
