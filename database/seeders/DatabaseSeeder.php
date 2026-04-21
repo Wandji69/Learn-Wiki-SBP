@@ -35,5 +35,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $user->assignRole('user');
+
+        $this->call([
+            CourseSeeder::class,
+            AppointmentSeeder::class,
+        ]);
     }
 }

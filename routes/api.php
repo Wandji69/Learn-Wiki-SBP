@@ -11,16 +11,17 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
-Route::middleware('auth:api')->group(function () {
+Route::get('/courses', [CourseController::class, 'index']);
+Route::get('/appointments', [AppointmentController::class, 'index']);
+
+Route::middleware('auth:web,api')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     // Route::get('/auth/me', [AuthController::class, 'me']);
 
-    Route::get('/courses', [CourseController::class, 'index']);
     Route::post('/courses', [CourseController::class, 'store'])->middleware('role:admin');
 
     Route::get('/enrollments', [EnrollmentController::class, 'index']);
     Route::post('/enroll', [EnrollmentController::class, 'store']);
 
     Route::post('/appointments', [AppointmentController::class, 'store']);
-    Route::get('/appointments', [AppointmentController::class, 'index']);
 });
