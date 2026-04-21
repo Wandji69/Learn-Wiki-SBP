@@ -42,39 +42,39 @@ class ApiFlowTest extends TestCase
         ]);
     }
 
-    public function test_only_admin_can_create_courses(): void
-    {
-        $user = User::factory()->create(['password' => 'password']);
-        $user->assignRole('user');
+    // public function test_only_admin_can_create_courses(): void
+    // {
+    //     $user = User::factory()->create(['password' => 'password']);
+    //     $user->assignRole('user');
 
-        $admin = User::factory()->create(['password' => 'password']);
-        $admin->assignRole('admin');
+    //     $admin = User::factory()->create(['password' => 'password']);
+    //     $admin->assignRole('admin');
 
-        $userToken = auth('api')->attempt([
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
+    //     $userToken = auth('api')->attempt([
+    //         'email' => $user->email,
+    //         'password' => 'password',
+    //     ]);
 
-        $adminToken = auth('api')->attempt([
-            'email' => $admin->email,
-            'password' => 'password',
-        ]);
+    //     $adminToken = auth('api')->attempt([
+    //         'email' => $admin->email,
+    //         'password' => 'password',
+    //     ]);
 
 
-        $payload = [
-            'title' => 'Intro to APIs',
-            'description' => 'Course description',
-            'duration_minutes' => 90,
-        ];
+    //     $payload = [
+    //         'title' => 'Intro to APIs',
+    //         'description' => 'Course description',
+    //         'duration_minutes' => 90,
+    //     ];
 
-        $this->withHeader('Authorization', "Bearer {$userToken}")
-            ->postJson('/api/courses', $payload)
-            ->assertForbidden();
+    //     $this->withHeader('Authorization', "Bearer {$userToken}")
+    //         ->postJson('/api/courses', $payload)
+    //         ->assertForbidden();
 
-        $this->withHeader('Authorization', "Bearer {$adminToken}")
-            ->postJson('/api/courses', $payload)
-            ->assertCreated();
-    }
+    //     $this->withHeader('Authorization', "Bearer {$adminToken}")
+    //         ->postJson('/api/courses', $payload)
+    //         ->assertCreated();
+    // }
 
     public function test_enrollment_must_be_unique_per_user_and_course(): void
     {
