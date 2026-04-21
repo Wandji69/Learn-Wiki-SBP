@@ -13,7 +13,12 @@ onMounted(() => {
     const authStore = useAuthStore();
 
     if (!authStore.isAuthenticated) {
-        router.visit('/app/login');
+        router.visit('/login');
+        return;
+    }
+
+    if (window.location.pathname.startsWith('/admin') && !authStore.isAdmin) {
+        router.visit('/user/dashboard');
     }
 });
 </script>

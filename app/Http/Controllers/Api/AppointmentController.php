@@ -17,9 +17,11 @@ class AppointmentController extends Controller
         $user = $request->user();
         $perPage = (int) $request->integer('per_page', 10);
 
-        $appointments = $user->hasRole('admin')
-            ? $this->appointmentService->listAll($perPage)
-            : $this->appointmentService->listForUser($user->id, $perPage);
+       if ($user->hasRole('admin')) {
+        $appointments = $this->appointmentService->listAll($perPage);
+       } else {
+        $appointments = $this->appointmentService->listForUser($user->id, $perPage);
+       }
 
         return AppointmentResource::collection($appointments);
     }

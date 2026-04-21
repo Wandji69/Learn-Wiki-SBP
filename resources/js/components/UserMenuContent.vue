@@ -18,7 +18,7 @@ type Props = {
 
 const handleLogout = async () => {
     await useAuthStore().logout();
-    router.visit('/');
+    window.location.href = '/login';
 };
 
 defineProps<Props>();
